@@ -174,7 +174,7 @@ def concatenate_data(folder_path):
 def config_init():
     try:
         config = configparser.RawConfigParser()
-        config_file = '.\config.ini'
+        config_file = '.\config2.ini'
 
         if os.path.isfile(config_file) == True:
             logging.getLogger("CONFIG").info('Configuration file found')
@@ -194,3 +194,25 @@ def config_init():
         logging.getLogger("CONFIG").exception('Error')
 
 
+#
+# Main
+#
+
+#Initializations
+log_init(save_log=True, log_path=None)
+config = config_init()
+
+#Arguments
+email = config.get('CREDENTIALS', 'email')
+password = config.get('CREDENTIALS', 'pw')
+id = config.get('CREDENTIALS', 'client_id')
+secret = config.get('CREDENTIALS', 'client_secret')
+driver_path = config.get('AUTHORIZATION', 'chrome_driver_path')
+auth_url = config.get('AUTHORIZATION', 'authorization_url')
+limit = config.get('ACTIVITIES', 'page_limit')
+
+#Body
+auth_code = generate_auth_code(driver_path=driver_path, auth_url=auth_url, email=email, pw=password)
+access_token = generate_access_token(auth_code=auth_code, client_id=id, client_secret=secret)
+scrape_activities(access_token=access_token, limit=limit)
+df = concatenate_data(folder_path=os.path.join(sys.path[0], 'data'))
