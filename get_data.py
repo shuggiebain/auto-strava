@@ -194,22 +194,3 @@ def config_init():
         logging.getLogger("CONFIG").exception('Error')
 
 
-'''MAIN'''
-
-
-log_init(save_log=True, log_path=None)
-configurator = config_init()
-id = configurator.get('CREDENTIALS', 'client_id')
-print(id)
-
-code = generate_auth_code(driver_path='C:\\Users\\snahar2\\Desktop\\chromedriver.exe',
-                          auth_url='http://www.strava.com/oauth/authorize?client_id=51260&response_type=code&redirect_'
-                                   'uri=http://localhost/exchange_token&approval_'
-                                   'prompt=force&scope=profile:read_all,activity:read_all',
-                          email='siddharth.nahar.7@gmail.com', pw='AKiedi7NRIfa')
-
-token = generate_access_token(auth_code=code, client_id=51260, client_secret='9c30ab53f6a64859fd0009d4d1b860b79ca6399a')
-
-scrape_activities(access_token=token, limit=200)
-
-df = concatenate_data(folder_path=os.path.join(sys.path[0], 'data'))
