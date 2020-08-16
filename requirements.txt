@@ -9,3 +9,7 @@ json
 pandas
 selenium
 urllib
+seaborn
+matplotlib
+argparse
+configparser
