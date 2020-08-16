@@ -7,5 +7,12 @@ Pre-requisites:
 - Config file with credentials
 - Selenium - executable chrome driver file stored locally 
 
-![monthly_mileage](https://github.com/nahar-senior/strava-performance-analysis/visualizations/monthly_mileage.jpg?raw=true)
+Visualization Sample: 
 
+- ![monthly_mileage](https://github.com/nahar-senior/strava-performance-analysis/blob/master/visualizations/monthly_mileage.jpg?raw=true)
+
+- ![runs_breakdown](https://github.com/nahar-senior/strava-performance-analysis/blob/master/visualizations/runs_breakdown.jpg?raw=true)
+
+- ![speed_over_distance](https://github.com/nahar-senior/strava-performance-analysis/blob/master/visualizations/speed_over_distance.jpg?raw=true)
+
+- ![time_over_distance](https://github.com/nahar-senior/strava-performance-analysis/blob/master/visualizations/time_over_distance.jpg?raw=true)
