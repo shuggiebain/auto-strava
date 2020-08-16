@@ -1,10 +1,9 @@
 import os
-import sys
-from get_data import concatenate_data
 import pandas as pd
 import math
 import seaborn as sns
 import matplotlib.pyplot as plt
+import logging
 
 pd.options.mode.chained_assignment = None
 
@@ -65,115 +64,122 @@ def clean_df(dataframe):
 
 def monthly_mileage_viz(distance_df):
 
-    distance = distance_df[['speed_km/min', 'distance', 'start_date', 'moving_time']]
-    distance['date'] = pd.to_datetime(distance['start_date'])
-    distance = distance.drop(['start_date'], axis=1)
-    dist = distance[['date', 'distance']]
-    dist['year'] = pd.DatetimeIndex(dist['date']).year
-    dist['month'] = pd.DatetimeIndex(dist['date']).month
+    try:
+        distance = distance_df[['speed_km/min', 'distance', 'start_date', 'moving_time']]
+        distance['date'] = pd.to_datetime(distance['start_date'])
+        distance = distance.drop(['start_date'], axis=1)
+        dist = distance[['date', 'distance']]
+        dist['year'] = pd.DatetimeIndex(dist['date']).year
+        dist['month'] = pd.DatetimeIndex(dist['date']).month
 
-    sns.set(style='whitegrid')
-    fig, ax = plt.subplots(figsize=(12, 6))
+        sns.set(style='whitegrid')
+        fig, ax = plt.subplots(figsize=(12, 6))
 
-    fig = sns.barplot(x='year', y='distance', data=dist, estimator=sum,
-                      ci=None, ax=ax, hue='month', palette='rocket_r')
+        fig = sns.barplot(x='year', y='distance', data=dist, estimator=sum,
+                          ci=None, ax=ax, hue='month', palette='rocket_r')
 
-    plt.legend(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+        plt.legend(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
 
-    ax.set(xlabel='Year', ylabel='Distance KM', title='MoM Mileage')
+        ax.set(xlabel='Year', ylabel='Distance KM', title='MoM Mileage')
 
-    for p in ax.patches:
-        height = p.get_height()
+        for p in ax.patches:
+            height = p.get_height()
 
-        if math.isnan(height):
-            pass
-        else:
-            ax.annotate(str(int(round(p.get_height()))), (p.get_x() * 1.005, p.get_height() * 1.005))
+            if math.isnan(height):
+                pass
+            else:
+                ax.annotate(str(int(round(p.get_height()))), (p.get_x() * 1.005, p.get_height() * 1.005))
 
-    if not os.path.exists('./visualizations'):
-        os.makedirs('./visualizations')
+        if not os.path.exists('./visualizations'):
+            os.makedirs('./visualizations')
 
-    plt.savefig('./visualizations/monthly_mileage.jpg')
+        plt.savefig('./visualizations/monthly_mileage.jpg')
+        logging.getLogger('VISUALIZATION').info('Monthly mileage plot generated')
+
+    except Exception as e:
+        logging.getLogger('VISUALIZATION').exception('Exception ' + str(e) + 'while generating Monthly Mileage plot')
 
 
 def speed_dist_intervals(speed_df):
 
-    speed_df = speed_df[['average_speed', 'distance', 'speed-seconds', 'speed_km/min']]
-    speed_df['intervals'] = speed_df['distance'].apply(lambda x: get_intervals(x))
+    try:
+        speed_df = speed_df[['average_speed', 'distance', 'speed-seconds', 'speed_km/min']]
+        speed_df['intervals'] = speed_df['distance'].apply(lambda x: get_intervals(x))
 
-    sns.set(style='whitegrid')
-    fig, ax = plt.subplots(figsize=(12, 6))
+        sns.set(style='whitegrid')
+        fig, ax = plt.subplots(figsize=(12, 6))
 
-    fig = sns.boxplot(x='intervals', y='speed-seconds', data=speed_df,
-                      palette='rocket_r', showfliers=False,
-                      order=['Under 3', '3 to 5', '5 to 7', '7 to 10', '10 to 13', '13 to 17', 'Over 17'])
+        fig = sns.boxplot(x='intervals', y='speed-seconds', data=speed_df,
+                          palette='rocket_r', showfliers=False,
+                          order=['Under 3', '3 to 5', '5 to 7', '7 to 10', '10 to 13', '13 to 17', 'Over 17'])
 
-    ax.set(xlabel='Intervals KM', ylabel='Seconds/KM', title='Speed Variation Over Distance Intervals')
+        ax.set(xlabel='Intervals KM', ylabel='Seconds/KM', title='Speed Variation Over Distance Intervals')
 
-    if not os.path.exists('./visualizations'):
-        os.makedirs('./visualizations')
+        if not os.path.exists('./visualizations'):
+            os.makedirs('./visualizations')
 
-    plt.savefig('./visualizations/speed_over_distance.jpg')
+        plt.savefig('./visualizations/speed_over_distance.jpg')
+
+        logging.getLogger('VISUALIZATION').info('Speed over distance intervals plot generated')
+
+    except Exception as e:
+        logging.getLogger('VISUALIZATION').exception('Exception ' + str(e) + 'while generating Speed Vs Dist plot')
 
 
 def time_dist_intervals(time_df):
 
-    time_df = time_df[['average_speed', 'distance', 'speed-seconds', 'moving_time']]
-    time_df['intervals'] = time_df['distance'].apply(lambda x: get_intervals(x))
+    try:
+        time_df = time_df[['average_speed', 'distance', 'speed-seconds', 'moving_time']]
+        time_df['intervals'] = time_df['distance'].apply(lambda x: get_intervals(x))
 
-    sns.set(style='whitegrid')
-    fig, ax = plt.subplots(figsize=(12, 6))
+        sns.set(style='whitegrid')
+        fig, ax = plt.subplots(figsize=(12, 6))
 
-    fig = sns.boxplot(x='intervals', y='moving_time', data=time_df,
-                      palette='rocket_r', showfliers=False,
-                      order=['Under 3', '3 to 5', '5 to 7', '7 to 10'
-                          , '10 to 13', '13 to 17', 'Over 17'])
+        fig = sns.boxplot(x='intervals', y='moving_time', data=time_df,
+                          palette='rocket_r', showfliers=False,
+                          order=['Under 3', '3 to 5', '5 to 7', '7 to 10'
+                              , '10 to 13', '13 to 17', 'Over 17'])
 
-    ax.set(xlabel='Intervals KM', ylabel='Duration', title='Duration Over Distance Intervals')
+        ax.set(xlabel='Intervals KM', ylabel='Duration', title='Duration Over Distance Intervals')
 
-    if not os.path.exists('./visualizations'):
-        os.makedirs('./visualizations')
+        if not os.path.exists('./visualizations'):
+            os.makedirs('./visualizations')
 
-    plt.savefig('./visualizations/time_over_distance.jpg')
+        plt.savefig('./visualizations/time_over_distance.jpg')
+
+        logging.getLogger('VISUALIZATION').info('Time over distance plot generated')
+
+    except Exception as e:
+        logging.getLogger('VISUALIZATION').exception('Exception ' + str(e) + 'while generating Time Vs Dist plot')
 
 
 def run_breakdown(run_df):
 
-    run_df = run_df[['average_speed', 'distance', 'speed-seconds', 'moving_time']]
-    run_df['intervals'] = run_df['distance'].apply(lambda x: get_intervals(x))
+    try:
+        run_df = run_df[['average_speed', 'distance', 'speed-seconds', 'moving_time']]
+        run_df['intervals'] = run_df['distance'].apply(lambda x: get_intervals(x))
 
-    sns.set(style='whitegrid')
-    fig, ax = plt.subplots(figsize=(12, 6))
+        sns.set(style='whitegrid')
+        fig, ax = plt.subplots(figsize=(12, 6))
 
-    fig = sns.countplot(x='intervals', data=run_df, palette='rocket_r',
-                        order=['Under 3', '3 to 5', '5 to 7', '7 to 10', '10 to 13', '13 to 17', 'Over 17'])
+        fig = sns.countplot(x='intervals', data=run_df, palette='rocket_r',
+                            order=['Under 3', '3 to 5', '5 to 7', '7 to 10', '10 to 13', '13 to 17', 'Over 17'])
 
-    ax.set(xlabel='Intervals KM', ylabel='No. of Runs', title='No. of Runs over Distance')
+        ax.set(xlabel='Intervals KM', ylabel='No. of Runs', title='No. of Runs over Distance')
 
-    for p in ax.patches:
-        height = p.get_height()
-        if math.isnan(height):
-            pass
-        else:
-            ax.annotate(str(int(round(p.get_height()))), (p.get_x() * 1.005, p.get_height() * 1.005))
+        for p in ax.patches:
+            height = p.get_height()
+            if math.isnan(height):
+                pass
+            else:
+                ax.annotate(str(int(round(p.get_height()))), (p.get_x() * 1.005, p.get_height() * 1.005))
 
-    if not os.path.exists('./visualizations'):
-        os.makedirs('./visualizations')
+        if not os.path.exists('./visualizations'):
+            os.makedirs('./visualizations')
 
-    plt.savefig('./visualizations/runs_breakdown.jpg')
+        plt.savefig('./visualizations/runs_breakdown.jpg')
 
+        logging.getLogger('VISUALIZATION').info('Run breakdown plot generated')
 
-
-'''
-main
-'''
-
-
-df = concatenate_data(folder_path=os.path.join(sys.path[0], 'data'))
-converted_df = conversions(df)
-cleaned = clean_df(converted_df)
-
-monthly_mileage_viz(cleaned)
-speed_dist_intervals(cleaned)
-time_dist_intervals(cleaned)
-run_breakdown(cleaned)
+    except Exception as e:
+        logging.getLogger('VISUALIZATION').exception('Exception ' + str(e) + 'while generating run breakdown plot')
