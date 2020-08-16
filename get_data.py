@@ -200,19 +200,19 @@ def config_init():
 
 # Initializations
 log_init(save_log=True, log_path=None)
-conf = config_init()
+# conf = config_init()
 
 # Arguments
-eml = conf.get('CREDENTIALS', 'email')
-pwd = conf.get('CREDENTIALS', 'pw')
-clid = conf.get('CREDENTIALS', 'client_id')
-scrt = conf.get('CREDENTIALS', 'client_secret')
-d_path = conf.get('AUTHORIZATION', 'chrome_driver_path')
-a_url = conf.get('AUTHORIZATION', 'authorization_url')
-lmt = conf.get('ACTIVITIES', 'page_limit')
+# eml = conf.get('CREDENTIALS', 'email')
+# pwd = conf.get('CREDENTIALS', 'pw')
+# clid = conf.get('CREDENTIALS', 'client_id')
+# scrt = conf.get('CREDENTIALS', 'client_secret')
+# d_path = conf.get('AUTHORIZATION', 'chrome_driver_path')
+# a_url = conf.get('AUTHORIZATION', 'authorization_url')
+# lmt = conf.get('ACTIVITIES', 'page_limit')
 
 # Body
-authentication_code = generate_auth_code(driver_path=d_path, auth_url=a_url, email=eml, pw=pwd)
-acc_token = generate_access_token(auth_code=authentication_code, client_id=clid, client_secret=scrt)
-scrape_activities(access_token=acc_token, limit=lmt)
-df = concatenate_data(folder_path=os.path.join(sys.path[0], 'data'))
+# authentication_code = generate_auth_code(driver_path=d_path, auth_url=a_url, email=eml, pw=pwd)
+# acc_token = generate_access_token(auth_code=authentication_code, client_id=clid, client_secret=scrt)
+# scrape_activities(access_token=acc_token, limit=lmt)
+# df = concatenate_data(folder_path=os.path.join(sys.path[0], 'data'))
