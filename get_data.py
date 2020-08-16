@@ -35,6 +35,11 @@ def log_init(save_log=False, log_path=None):
     logging.getLogger("GET ACTIVITIES").addHandler(streamHandler)
     logging.getLogger("GET ACTIVITIES").propagate = False
 
+    logging.getLogger("VISUALIZATION").handlers = []
+    logging.getLogger("VISUALIZATION").setLevel('INFO')
+    logging.getLogger("VISUALIZATION").addHandler(streamHandler)
+    logging.getLogger("VISUALIZATION").propagate = False
+
     if save_log:
 
         if log_path is None:
@@ -48,6 +53,7 @@ def log_init(save_log=False, log_path=None):
     logging.getLogger("CONFIG").addHandler(fileHandler)
     logging.getLogger("API AUTHENTICATION").addHandler(fileHandler)
     logging.getLogger("GET ACTIVITIES").addHandler(fileHandler)
+    logging.getLogger("VISUALIZATION").addHandler(fileHandler)
 
 
 def driver_configurations(driver_path):
@@ -193,26 +199,3 @@ def config_init():
 
     except Exception as e:
         logging.getLogger("CONFIG").exception('Error' + str(e))
-
-#
-# Main
-#
-
-# Initializations
-log_init(save_log=True, log_path=None)
-# conf = config_init()
-
-# Arguments
-# eml = conf.get('CREDENTIALS', 'email')
-# pwd = conf.get('CREDENTIALS', 'pw')
-# clid = conf.get('CREDENTIALS', 'client_id')
-# scrt = conf.get('CREDENTIALS', 'client_secret')
-# d_path = conf.get('AUTHORIZATION', 'chrome_driver_path')
-# a_url = conf.get('AUTHORIZATION', 'authorization_url')
-# lmt = conf.get('ACTIVITIES', 'page_limit')
-
-# Body
-# authentication_code = generate_auth_code(driver_path=d_path, auth_url=a_url, email=eml, pw=pwd)
-# acc_token = generate_access_token(auth_code=authentication_code, client_id=clid, client_secret=scrt)
-# scrape_activities(access_token=acc_token, limit=lmt)
-# df = concatenate_data(folder_path=os.path.join(sys.path[0], 'data'))
