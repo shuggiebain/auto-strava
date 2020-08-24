@@ -6,7 +6,7 @@ https://developers.strava.com/docs/authentication/
 
 Pre-requisites: 
 - Register Client application on Strava 
-- Gather App credentials from Strava
+- Gather App credentials from Strava App
 - Update Project config file in this repo with your credentials
 - Selenium - executable chrome driver file downloaded and stored locally - pass path to executable in config file 
 
